@@ -17,8 +17,8 @@ class Parser:
 
 if __name__ == '__main__':
 
-    parse = Parser('авто')
+    parse = Parser('python')
     articles = parse.get_articles()
     count = 0
     for article in articles:
-        pprint(article['title'])
+        print(article['title'])
