@@ -1,6 +1,6 @@
-from flask import request, render_template, jsonify
+from flask import request, render_template
 
-from main import Parser
+from zen_articles.zen_parser import Parser
 from zen_articles import app
 
 
@@ -15,3 +15,11 @@ def index():
         return render_template("index.html", titles=titles)
 
     return render_template('index.html')
+
+
+@app.route('/', methods=['post'])
+def article():
+    if request.method == 'POST':
+        interest = request.form.get('interest')
+        pars = Parser(str(interest))
+
