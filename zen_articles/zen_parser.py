@@ -1,9 +1,7 @@
 import requests
 import time
 import bs4
-from pprint import pprint
 from os import mkdir
-from time import sleep
 
 
 class Parser:
@@ -27,7 +25,6 @@ class Parser:
             req = requests.get(str(item['link']))
             soup = bs4.BeautifulSoup(req.text, 'lxml')
             title = soup.title.text
-            # pprint(title)
             text = soup.find_all(class_='article-render__block')
 
             article = {
@@ -36,6 +33,7 @@ class Parser:
                 'text': text
             }
             self.save_article_in_file(article)
+        print(f'Завершено. Результат в папке "/articles/{self.interest}/"')
 
     def save_article_in_file(self, article):
         try:
@@ -45,7 +43,7 @@ class Parser:
                 for text in article['text']:
                     file.write(text.text)
                     file.write('\n')
-                print('success', article['title'])
+                print('success:', article['title'])
                 file.close()
         except OSError:
             print('file name to long, skip this file')
@@ -53,5 +51,6 @@ class Parser:
 
 
 if __name__ == '__main__':
-    par = Parser('python')
+    interest = str(input('Введи тематику: '))
+    par = Parser(interest)
     par.get_article_body()
