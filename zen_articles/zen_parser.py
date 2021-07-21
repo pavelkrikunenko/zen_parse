@@ -31,18 +31,25 @@ class Parser:
             text = soup.find_all(class_='article-render__block')
 
             article = {
-                'title': title,
+                'link': item['link'],
+                'title': str(title).split('|')[0],
                 'text': text
             }
             self.save_article_in_file(article)
 
     def save_article_in_file(self, article):
-        with open(f'articles/{self.interest}/{article["title"]}.txt', mode='a') as file:
-            for text in article['text']:
-                file.write(text.text)
+        try:
+            with open(f'articles/{self.interest}/{article["title"]}.doc', mode='a') as file:
+                file.write(article['link'])
                 file.write('\n')
-            print('success', article['title'])
-            file.close()
+                for text in article['text']:
+                    file.write(text.text)
+                    file.write('\n')
+                print('success', article['title'])
+                file.close()
+        except OSError:
+            print('file name to long, skip this file')
+            print(article['title'])
 
 
 if __name__ == '__main__':
