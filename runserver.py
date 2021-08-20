@@ -1,4 +1,4 @@
-from zen_articles import app
+from zen import app
 
 if __name__ == '__main__':
     app.run()

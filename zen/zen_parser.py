@@ -2,6 +2,8 @@ import requests
 import time
 import bs4
 from os import mkdir
+from zen.models import Article
+from zen import db
 
 
 class Parser:
@@ -20,7 +22,6 @@ class Parser:
         mkdir(f'articles/{self.interest}', 0o754)
 
     def get_article_body(self):
-        self.make_dir()
         for item in self.get_articles():
             req = requests.get(str(item['link']))
             soup = bs4.BeautifulSoup(req.text, 'lxml')
@@ -32,8 +33,12 @@ class Parser:
                 'title': str(title).split('|')[0],
                 'text': text
             }
-            self.save_article_in_file(article)
-        print(f'Завершено. Результат в папке "/articles/{self.interest}/"')
+            self.save_to_database(article)
+
+    def save_to_database(self, article):
+        article_obj = Article(title=article['title'], text=article['text'], interest=self.interest)
+        db.session.add(article_obj)
+        db.session.commit()
 
     def save_article_in_file(self, article):
         try:
@@ -53,4 +58,4 @@ class Parser:
 if __name__ == '__main__':
     interest = str(input('Введи тематику: '))
     par = Parser(interest)
-    par.get_article_body()
+    par.get_articles()

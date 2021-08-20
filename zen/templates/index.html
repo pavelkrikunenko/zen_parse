@@ -12,9 +12,12 @@
         <input type="text" name="interest">
         <input type="submit">
     </form>
+    {% if url %}
+        <a href="{{ url }}"> {{ url }}</a>
+    {% endif %}
     {% if titles %}
         {% for title in titles %}
-            <h1 ><a href="{{title}}">{{ title }}</a> </h1>
+            <h1 ><a href="{{ url_for('article', title.id ) }}">{{ title.title }}</a> </h1>
         {% endfor %}
     {% endif %}
 </body>
